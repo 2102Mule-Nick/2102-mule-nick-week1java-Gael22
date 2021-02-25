@@ -1,6 +1,7 @@
 package com.revature.eval.java.core;
 
 import static org.hamcrest.CoreMatchers.is;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -437,7 +438,7 @@ public class EvaluationServiceTest {
 		assertThat(evaluationService.calculateNthPrime(1), is(2));
 	}
 
-	@Test
+	@Test 
 	public void testSecondPrime() {
 		assertThat(evaluationService.calculateNthPrime(2), is(3));
 	}

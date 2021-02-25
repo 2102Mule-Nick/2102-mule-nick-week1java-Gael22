@@ -1,10 +1,16 @@
-package com.revature.eval.java.core;
+ package com.revature.eval.java.core;
 
 import java.time.temporal.Temporal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 public class EvaluationService {
+
 
 	/**
 	 * 1. Without using the StringBuilder or StringBuffer class, write a method that
@@ -30,9 +36,19 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String acronym(String phrase) {
-		// TODO Write an implementation for this method declaration
-		return null;
-	}
+		
+		   String acronym = "";
+		   
+			acronym += phrase.toUpperCase().charAt(0);
+			
+			for (int i = 1; i <= phrase.length() - 1; i++) {
+				if (phrase.charAt(i - 1) == ' ' || phrase.charAt(i - 1) == '_') {
+					acronym += phrase.toUpperCase().charAt(i);
+				}
+			}
+			return acronym;
+		}
+		
 
 	/**
 	 * 3. Determine if a triangle is equilateral, isosceles, or scalene. An
@@ -84,18 +100,29 @@ public class EvaluationService {
 		}
 
 		public boolean isEquilateral() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			if(sideOne == sideTwo && sideTwo == sideThree) {
+				return true;
+			} else {
+				return false;
+			}
+			
+			
 		}
 
 		public boolean isIsosceles() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			if(sideOne == sideTwo || sideTwo == sideThree || sideThree == sideOne) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 		public boolean isScalene() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			if(sideOne != sideTwo && sideTwo != sideThree) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 	}
@@ -116,8 +143,66 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getScrabbleScore(String string) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		
+		Map<Character, Integer> lettersMap = new HashMap<>();
+		String lettersCap = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		for (int i = 0; i < lettersCap.length(); i++) {
+            if (lettersCap.charAt(i) == 'A' || lettersCap.charAt(i) == 'E' ||
+                    lettersCap.charAt(i) == 'I' || lettersCap.charAt(i) == 'O' ||
+                    lettersCap.charAt(i) == 'O' || lettersCap.charAt(i) == 'U' ||
+                    lettersCap.charAt(i) == 'L' || lettersCap.charAt(i) == 'N' ||
+                    lettersCap.charAt(i) == 'R' || lettersCap.charAt(i) == 'S' ||
+                    lettersCap.charAt(i) == 'T') {
+
+                lettersMap.put(lettersCap.charAt(i), 1);
+                lettersMap.put(lettersCap.toLowerCase().charAt(i), 1);
+            }
+
+            if (lettersCap.charAt(i) == 'D' || lettersCap.charAt(i) == 'G') {
+                lettersMap.put(lettersCap.charAt(i), 2);
+                lettersMap.put(lettersCap.toLowerCase().charAt(i), 2);
+            }
+
+            if (lettersCap.charAt(i) == 'B' || lettersCap.charAt(i) == 'C' ||
+                    lettersCap.charAt(i) == 'M' || lettersCap.charAt(i) == 'P') {
+                lettersMap.put(lettersCap.charAt(i), 3);
+                lettersMap.put(lettersCap.toLowerCase().charAt(i), 3);
+            }
+
+            if (lettersCap.charAt(i) == 'F' || lettersCap.charAt(i) == 'H' ||
+                    lettersCap.charAt(i) == 'V' || lettersCap.charAt(i) == 'W' ||
+                    lettersCap.charAt(i) == 'Y') {
+                lettersMap.put(lettersCap.charAt(i), 4);
+                lettersMap.put(lettersCap.toLowerCase().charAt(i), 4);
+            }
+
+            if (lettersCap.charAt(i) == 'K') {
+                lettersMap.put(lettersCap.charAt(i), 5);
+                lettersMap.put(lettersCap.toLowerCase().charAt(i), 5);
+            }
+
+            if (lettersCap.charAt(i) == 'J' || lettersCap.charAt(i) == 'X') {
+                lettersMap.put(lettersCap.charAt(i), 8);
+                lettersMap.put(lettersCap.toLowerCase().charAt(i), 8);
+            }
+
+            if (lettersCap.charAt(i) == 'Q' || lettersCap.charAt(i) == 'Z') {
+                lettersMap.put(lettersCap.charAt(i), 10);
+                lettersMap.put(lettersCap.toLowerCase().charAt(i), 10);
+            }
+
+        }
+
+        int totalValue = 0;
+
+        for (int j = 0; j < string.length(); j++) {
+
+            totalValue += lettersMap.get(string.charAt(j));
+        }
+
+        return totalValue;
+		
+	    
 	}
 
 	/**
@@ -151,9 +236,29 @@ public class EvaluationService {
 	 * Note: As this exercise only deals with telephone numbers used in
 	 * NANP-countries, only 1 is considered a valid country code.
 	 */
-	public String cleanPhoneNumber(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+	public String cleanPhoneNumber(String string)  throws IllegalArgumentException {
+		String  result = "";
+		boolean checkCountryCode = true;
+		int digitCount = 0;
+		for (int i = 0; i < string.length(); i++) {
+			if(Character.isDigit(string.charAt(i))) {
+				if (checkCountryCode) {
+					if (string.charAt(i) != 1) {
+						result += string.charAt(i);
+						digitCount++;
+						checkCountryCode = false;
+					}
+				}
+				else {
+					result += string.charAt(i);
+					digitCount++;
+				}
+			}
+		}
+		if(digitCount != 10) {
+			throw new IllegalArgumentException();
+		}
+		return result;
 	}
 
 	/**
@@ -166,9 +271,27 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Map<String, Integer> wordCount(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
-	}
+		
+		String [] tokens = string.split("[\\s@&.=?,$+-]+");
+		
+		System.out.println("Total words: "+tokens.length);
+		
+				Map<String,Integer> hashMap = new HashMap<>();
+				
+				for (String word : tokens) {
+					int count = 0;
+					
+					
+					for (String sameword : tokens) {
+						if(word.equals(sameword)) {
+							count++;
+						}
+						
+						hashMap.put(word,count);	
+					}
+				}
+				return hashMap;
+			}
 
 	/**
 	 * 7. Implement a binary search algorithm.
@@ -205,11 +328,10 @@ public class EvaluationService {
 	 * binary search is a dichotomic divide and conquer search algorithm.
 	 * 
 	 */
-	static class BinarySearch<T> {
+	 static class BinarySearch<T> {
 		private List<T> sortedList;
 
 		public int indexOf(T t) {
-			// TODO Write an implementation for this method declaration
 			return 0;
 		}
 
@@ -245,9 +367,24 @@ public class EvaluationService {
 	 * @param string
 	 * @return
 	 */
+	 private static final char[] vowels = {'a', 'e', 'i', 'o', 'u'};
 	public String toPigLatin(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		 int start = 0; // start index of word
+		    int firstVowel = 0;
+		    int end = string.length(); // end index of word
+		    for(int i = 0; i < end; i++) { // loop over length of word
+		        char c = Character.toLowerCase(string.charAt(i)); // char of word at i, lower cased
+		        if(Arrays.asList(vowels).contains(c)) { // convert vowels to a list so we can use List.contains() convenience method.
+		            firstVowel = i;
+		            break; // stop looping
+		        }
+		    }
+		    if(start != firstVowel) { // if start is not equal to firstVowel, we caught a vowel.
+		        String startString = string.substring(firstVowel, end);
+		        String endString = string.substring(start, firstVowel) + "ay";
+		        return startString+endString;
+		    }
+		    return string; //couldn't find a vowel, return original
 	}
 
 	/**
@@ -266,9 +403,20 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isArmstrongNumber(int input) {
-		// TODO Write an implementation for this method declaration
-		return false;
-	}
+		 int remainder, sum = 0, temp = 0;
+	        temp = input;
+	        while (input > 0) {
+	            remainder = input % 10;
+	            sum = sum + (remainder * remainder * remainder);
+	            input = input / 10;
+	        }
+	        return sum == temp;
+       
+    }
+	      
+		   
+
+	
 
 	/**
 	 * 10. Compute the prime factors of a given natural number.
@@ -281,9 +429,18 @@ public class EvaluationService {
 	 * @return
 	 */
 	public List<Long> calculatePrimeFactorsOf(long l) {
-		// TODO Write an implementation for this method declaration
-		return null;
-	}
+		 Long n = l;
+	        List<Long> factors = new ArrayList<Long>();
+	        for (Long i = 2L; i <= n; i++) {
+	            while (n % i == 0) {
+	                factors.add(i);
+	                n /= i;
+	            }
+	        }
+	        return factors;
+    } 
+  
+		
 
 	/**
 	 * 11. Create an implementation of the rotational cipher, also sometimes called
@@ -339,7 +496,7 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int calculateNthPrime(int i) {
-		// TODO Write an implementation for this method declaration
+		
 		return 0;
 	}
 

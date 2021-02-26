@@ -572,7 +572,31 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isValidIsbn(String string) {
-		// TODO Write an implementation for this method declaration
+		string = string.replaceAll("\\W", "");
+		string = string.replace(" ", " ");
+		
+		int sum = 0;
+		int digit = 0;
+		char ch = '\0';
+		
+		for (int i = 1; i < 9; i++) {
+			ch = string.charAt(i - 1);
+			digit = Character.getNumericValue(ch);
+			sum += (i * digit);
+		}
+		
+		ch = string.charAt(9);
+		ch = Character.toUpperCase(ch);
+		if(ch == 'X') {
+			sum += (10*10);
+		} else {
+			digit = Character.getNumericValue(ch);
+			sum += (digit * 10);
+		}
+		if(sum % 11 == 0) {
+			return true;
+		}
+		
 		return false;
 	}
 

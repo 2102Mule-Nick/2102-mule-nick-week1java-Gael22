@@ -328,11 +328,27 @@ public class EvaluationService {
 	 * binary search is a dichotomic divide and conquer search algorithm.
 	 * 
 	 */
-	 static class BinarySearch<T> {
+	 static class BinarySearch<T extends Comparable <T>> {
 		private List<T> sortedList;
 
 		public int indexOf(T t) {
-			return 0;
+			int selector, low=0, hight=sortedList.size()-1, index= - 1;
+			if(sortedList.isEmpty()) {
+				return index;
+			}
+			while (low <= hight) {
+				int mid = (hight+low)/2;
+				selector = t.compareTo(sortedList.get(mid));
+				if (selector>0) {
+					low = mid+1;
+				} else if (selector < 0) {
+					hight = mid-1;
+				}else if (selector==0) {
+					index=mid;
+					break;
+				}
+			}
+			return index;
 		}
 
 		public BinarySearch(List<T> sortedList) {
@@ -368,6 +384,7 @@ public class EvaluationService {
 	 * @return
 	 */
 	 private static final char[] vowels = {'a', 'e', 'i', 'o', 'u'};
+	private static final int ALPHABET_COUNT = 0;
 	public String toPigLatin(String string) {
 		 int start = 0; // start index of word
 		    int firstVowel = 0;
@@ -477,8 +494,20 @@ public class EvaluationService {
 		}
 
 		public String rotate(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			String cipherString = "";
+			char rotatedChar;
+			for(int x = 0; x < string.length(); x++) {
+				rotatedChar = string.charAt(x);
+				if(Character.isLetter(string.charAt(x))) {
+					rotatedChar = (char) (string.charAt(x) + key);
+					if((Character.isLowerCase(string.charAt(x)) && rotatedChar > 'Z')||
+							(Character.isUpperCase(string.charAt(x))&&rotatedChar>'z')) {
+						rotatedChar =(char) (string.charAt(x) - (26-key));
+					}
+				}
+				cipherString+=rotatedChar;
+			}
+			return cipherString;
 		}
 
 	}
@@ -496,8 +525,21 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int calculateNthPrime(int i) {
-		
-		return 0;
+		int count=1, num=1, x;
+		if(i == 0) {
+			throw new IllegalArgumentException();
+		}
+		while(count<=i) {
+			num++;
+			for(x=2; x<= num; x++) {
+				if(num%x==0 && x!=num) {
+					break;
+				}if (x==num) {
+					count++;
+				}
+			}
+		}
+		return num;
 	}
 
 	/**
@@ -533,8 +575,31 @@ public class EvaluationService {
 		 * @return
 		 */
 		public static String encode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			String shavedString="", encodedString= "";
+			char holder;
+			String strippedString = string.replace(",", "");
+			strippedString = strippedString.replace(" ", "");
+			strippedString = strippedString.replace(".", "");
+			for (int x=0; x<strippedString.length(); x++) {
+				shavedString+=strippedString.charAt(x);
+				if((x+1)%5==0 && x!=0) {
+					shavedString+= " ";
+				}
+			}
+			System.out.println(shavedString);
+			for(int x=0; x<shavedString.length();x++) {
+				holder = shavedString.charAt(x);
+				if(Character.isLetter(shavedString.charAt(x))) {
+					if(Character.isLowerCase(holder)) {
+						holder = (char) ('a' -holder+ 'z');
+					}else if (Character.isUpperCase(holder)) {
+						holder = (char) ('A' -holder+ 'Z');
+					}
+				}
+				encodedString+=Character.toLowerCase(holder);
+			}
+			encodedString = encodedString.trim();
+			return encodedString;
 		}
 
 		/**
@@ -614,7 +679,24 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isPangram(String string) {
-		// TODO Write an implementation for this method declaration
+		if (string == null) {
+			return false;
+		}
+		Boolean[] alphabetMarker = new Boolean[ALPHABET_COUNT];
+		Arrays.fill(alphabetMarker, false);
+		int alphabetIndex = 0;
+		string = string.toUpperCase();
+		for (int i = 0; i < string.length(); i++) {
+			if ('A' <= string.charAt(i) && string.charAt(i) <= 'Z') {
+				alphabetIndex = string.charAt(i) - 'A';
+				alphabetMarker[alphabetIndex] = true;
+			}
+		}
+		for (boolean index : alphabetMarker) {
+			if (!index) {
+				return false;
+			}
+		}
 		return false;
 	}
 
@@ -718,7 +800,40 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int solveWordProblem(String string) {
-		// TODO Write an implementation for this method declaration
+		string = string.replace('?', ' ');
+		String[] words = string.split(" ");
+		int [] numbers = new int[2];
+		
+		int index = 0;
+		for(String word : words) {
+			if(index < 2) {
+				if(word.charAt(0) == '-') {
+					Scanner scan = new Scanner(word.substring(1));
+					numbers[index] = -scan.nextInt();
+					index++;
+					scan.close();
+				}
+				else if (Character.isDigit(word.charAt(0))) {
+					Scanner scan = new Scanner(word);
+					numbers[index] = scan.nextInt();
+					scan.close();
+				}
+			}
+			else  {
+				break;
+			}
+		}
+		switch(words [3]) {
+		case "plus":
+			return numbers[0] + numbers[1];
+		case "minus":
+			return numbers[0] - numbers[1];
+		case "divided":
+			return numbers[0] / numbers[1];
+		case "multiplied":
+			return numbers[0] * numbers[1];
+			
+		}
 		return 0;
 	}
 
